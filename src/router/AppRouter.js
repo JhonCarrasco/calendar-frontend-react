@@ -12,15 +12,17 @@ import { CalendarScreen } from '../components/calendar/CalendarScreen';
 import { startChecking } from '../actions/auth';
 import { PublicRoute } from './PublicRoute';
 import { PrivateRoute } from './PrivateRoute';
+import { connect } from 'react-redux';
 
-export const AppRouter = () => {
+const AppRouter = ({checking, uid, getChecking}) => {
 
     const dispatch = useDispatch();
-    const { checking, uid } = useSelector( state => state.auth);
+    // const { checking, uid } = useSelector( state => state.auth);
 
     useEffect(() => {
         
-        dispatch( startChecking() );
+        // dispatch( startChecking() );
+        getChecking()
 
     }, [dispatch])
 
@@ -53,3 +55,19 @@ export const AppRouter = () => {
         </Router>
     )
 }
+
+const mapStateToProps = (state) => {
+    const {auth: { checking, uid }} = state
+
+    return {
+        checking,
+        uid
+    }
+}
+
+const mapDispatchToProps = (dispatch, { navigation }) => ({
+    getChecking: () =>
+      dispatch(startChecking()),
+  })
+
+export default connect(mapStateToProps, mapDispatchToProps)(AppRouter)
